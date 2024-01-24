@@ -207,3 +207,155 @@ Importância do CI: Aprendemos que o CI garante que todas as alterações no có
 Quais etapas o CI executa: Aprendemos também que o CI executa os processos de testes, tanto unitários quantos de integração e também executa os processos para garantir qualidade de código, como o flutter analyse.
 Configuração inicial do codemagic: Fizemos a configuração inicial do codemagic, já fazendo o vínculo com Github e criando um projeto apontando para nosso repositório.
 Na próxima aula, vamos fazer nossa primeira configuração de um processo estruturado de CI, para aplicarmos na prática, os conceitos que aprendemos até agora. Te vejo lá!
+
+#### 24/01/2024
+
+@02-CI no Codemagic
+
+@@01
+Projeto da aula anterior
+
+Antes de continuar é importante que tenha feito a configuração do projeto no Codemagic que foi levantado na aula anterior.
+
+@@02
+Para saber mais
+
+É importante que antes de avançarmos para a configuração do CI, você tenha um entendimento básico sobre testes, tanto os unitários, quanto os de integração. Para isso, fica aqui como sugestão 2 artigos aqui da Alura, que podem lhe auxiliar a entender melhor essas etapas.
+Testes unitários
+Testes de integração
+
+https://www.alura.com.br/artigos/tipos-de-testes-principais-por-que-utiliza-los?_gl=1*73mhky*_ga*MTgwMzIzMjk2Ni4xNjg4ODE5OTcz*_ga_1EPWSW3PCS*MTcwNjEzMzM0My4xNzMuMS4xNzA2MTM3MDkzLjAuMC4w*_fplc*SzU5czdFYTJDcE5vM1BsYlVnWUtESnV0MEl6VFNTYU5VWnlTNW1LR2JlQkZySE1HaTNBdSUyQnFkRHhFOUt6RUZnRjZ1eWtBcEhvOWo3akRVa2sxSHdNNXJNYzR2S1NRY1FscVk4YXJmJTJGUlVQcmtNSVhXU1RSMjVoM2NuNVljQSUzRCUzRA..
+
+https://www.alura.com.br/artigos/dicas-desenvolver-testes-unitarios-integracao-front-end?_gl=1*73mhky*_ga*MTgwMzIzMjk2Ni4xNjg4ODE5OTcz*_ga_1EPWSW3PCS*MTcwNjEzMzM0My4xNzMuMS4xNzA2MTM3MDkzLjAuMC4w*_fplc*SzU5czdFYTJDcE5vM1BsYlVnWUtESnV0MEl6VFNTYU5VWnlTNW1LR2JlQkZySE1HaTNBdSUyQnFkRHhFOUt6RUZnRjZ1eWtBcEhvOWo3akRVa2sxSHdNNXJNYzR2S1NRY1FscVk4YXJmJTJGUlVQcmtNSVhXU1RSMjVoM2NuNVljQSUzRCUzRA..
+
+@@03
+Configurando as etapas do CI
+
+Já passamos pelo processo de configuração inicial do Codemagic, criamos nossa conta e definimos algumas coisas. Entendemos também um pouco sobre o processo de CI, em que precisamos executar de maneira integrada e contínua os processos de qualidade de código e os processos de testes que definimos em nosso repositório.
+Até aí, está tudo certo. Mas agora precisamos configurar isso para que nosso projeto esteja integrado dentro do Codemagic, de modo que esses processos sejam de fato um CI, porque até agora só temos a configuração inicial. Uma vez que configuramos isso de maneira integrada e contínua, nosso projeto para de ter esses problemas e começamos a elevar significativamente a barra de qualidade do nosso projeto.
+
+Configurando as etapas para o CI
+Seguindo o processo, para conseguirmos elevar a barra de qualidade do nosso aplicativo, precisamos definir justamente as etapas. A primeira seria melhorar a qualidade do código.
+
+Poderíamos trazer algumas ferramentas que existem no mercado para fazer essa avaliação e garantir isso, que executam junto dentro do CI, mas o Flutter tem uma ferramenta sensacional, o flutter analyze. É justamente um comando nativo do Flutter que vai passar por todo o código do projeto, verificar arquivo por arquivo e trazer os problemas que existem no código.
+
+Podemos executar isso apenas abrindo o terminal, indo até a pasta do projeto e executando o flutter analyze, uma vez que temos o Flutter instalado. É muito útil e auxilia bastante, então essa seria a primeira etapa.
+
+flutter analyze
+COPIAR CÓDIGO
+Indo para a segunda etapa, temos o processo de testes. Existem duas maneiras de executar os testes dentro do aplicativo no Flutter. Temos o comando flutter test, que executa tanto os testes unitários quanto os testes de widgets, executando todos ao mesmo tempo. E temos o flutter drive, para executar os testes de integração.
+
+Não se preocupe com o flutter drive agora; iremos abordá-lo apenas na próxima aula.
+flutter test
+COPIAR CÓDIGO
+flutter drive
+COPIAR CÓDIGO
+Agora que já sabemos como executar o flutter analyze para garantir o código, e como executar o flutter test para garantir que os testes funcionam, precisamos trazer isso para nossa integração. É isso que vamos abordar agora durante o processo.
+
+Abrindo o Codemagic, temos alguns setups, algumas configurações como mencionamos na última aula, iniciando pela seção "Build for platforms" ("Construir para plataformas"). Encontramos várias opções. Como estamos fazendo o setup de CI, não vamos marcar nenhuma das plataformas. Vamos desmarcar "Android" e "iOS" e vamos marcar apenas o "Run tests only" ("Executar apenas testes").
+
+Em seguida, entramos na etapa dos testes. Temos o "Build triggers", "Environment variables", algumas configurações, mas o que é interessante para nós agora são os testes ("Tests"). Ao expandir essa categoria, conseguimos configurar algumas coisas. A primeira delas é "Stop build if tests or analysis fail" ("Interrompa a compilação se os testes ou análises falharem").
+
+Com essa opção, ele vai parar a compilação se, ao analisar o código ou rodar o teste, acontecer algum erro. Vamos marcar que sim. Seguindo esse processo, vai fazer muito mais sentido quando formos trabalhar com o Codemagic. Mas não se preocupe; vamos apenas deixar marcado para evitar qualquer problema.
+
+Na seção "Static code analysis", queremos que seja executado o flutter analyze, então vamos simplesmente marcar a caixa de seleção para ativar. O Codemagic pergunta quais são os argumentos para executar. No nosso caso, é só o flutter analyze, como comentamos. Como ele já define isso por padrão, apenas deixamos o comando analyze no campo "Flutter analyze arguments", que já está definido e funcional.
+
+Agora, na seção "Integration and unit tests", entramos justamente no que seriam os testes de integração e os testes unitários. Os de integração serão abordados na próxima aula, mas os unitários vamos conhecer agora.
+
+Basicamente, temos que habilitar a opção "Enable Flutter test". Serão solicitados os argumentos. Se você quiser rodar só o flutter test, sem problemas; se quiser rodar apenas em uma pasta específica, você pode adicionar. Vamos colocar como argumento test. As seções "Run Flutter Driver tests on" e "Flutter drive arguments" ficarão apenas para a próxima aula, que é justamente para rodar a pasta do teste de integração.
+
+Para rodar o flutter test, basicamente temos que habilitar "Enable Flutter test" e trazer o "Flutter test arguments". Uma vez que salvamos, já temos todo o nosso processo de teste integrado dentro do nosso projeto e podemos rodar.
+
+Como já tínhamos lincado, podemos escolher qual branch queremos rodar, qual é o workflow, e isso vamos abordar um pouco melhor nas aulas seguintes para entender como funciona. Definidas as configurações, conseguimos fazer o "Start new build" para rodar o CI. Faremos isso manualmente, mas não se preocupe que logo aprenderemos a rodar de forma integrada.
+
+Após começar a rodar, ele vai passar por todas as etapas, o que pode demorar um tempo, então vamos pular para o momento em que o teste foi executado. Temos o final, após ter rodado todo o processo, passando por algumas etapas.
+
+Ele vai preparar a máquina; pegar os dados do app, fazendo um git clone; instalar os SDKs, garantindo que o Flutter está bem instalado e que está tudo funcional; instalar as dependências, executando um flutter packages pub get; e depois disso, ele começa o processo de teste, passando por toda a questão dos testes em que tínhamos quatro arquivos, e a partir disso trazendo um resultado. Foi garantido que ele passou por 14 testes, então deu tudo certo e ele finalizou.
+
+Conclusão
+Já temos todo o processo configurado, porém, ainda não temos um CI, porque só garantimos que os testes e o flutter analyze estão rodando.
+
+Precisamos garantir, a partir de agora, que ele vai estar integrado com nosso repositório, para que quando houver alterações, por exemplo, quando alguém quiser subir uma branch ou fazer um pull request, isso seja rodado de maneira automática, para garantir que nenhum teste vai estar quebrado e que vamos estar com alto nível de qualidade.
+
+É isso que vamos abordar no próximo vídeo. Vamos lá!
+
+@@04
+Automatizando o processo de CI
+
+De volta à configuração na tela do Codemagic, vamos seguir o processo. Já configuramos todas as etapas, os testes, a questão de rodar o Analyze, mas eles ainda não estão integrados continuamente no nosso projeto. Eles estão presentes, mas se não apertarmos o botão, não vão rodar. Então, precisamos fazer essa configuração para realizar a integração contínua, porque até agora não temos isso, apenas preparamos o ambiente para ela.
+Integrando as etapas ao CI
+Realizar a integração contínua com o Codemagic é bem simples. A primeira coisa que precisamos fazer é definir qual será o gatilho (trigger). Trata-se da primeira etapa "Build triggers", que é a maneira como o Codemagic vai ouvir o projeto no GitHub e garantir que tudo funcione corretamente.
+
+Por exemplo, se houver um pull request, um merge ou qualquer outra ação, o Codemagic ouvirá e, conforme definirmos, ele vai rodar. Se não configurarmos isso, teremos problemas e precisaremos rodar manualmente.
+
+Nesse caso, vamos definir o trigger como "Trigger on pull request update", que vai ouvir todas as alterações em pull requests. Então, se abrirmos um pull request para a main ou fizermos um novo commit, ele estará ouvindo a partir do momento que tivermos um pull request.
+
+Uma vez definido o gatilho, precisamos definir quais branches vamos ouvir. Podemos ouvir todas as branches deixando um asterisco (*) como padrão, ou podemos especificar, como apenas ouvir para a branch main, por exemplo. Depende de como está configurado no projeto. No nosso caso, vamos ouvir todas as branches, mas mais adiante, conseguiremos definir situações específicas e você observará na prática, ouvindo diferentes branches e criando diferentes workflows.
+
+Após salvar essa alteração, o Codemagic vai fazer uma configuração no GitHub para poder ouvir essas mudanças. É importante saber disso, porque se o Codemagic não tiver permissão para configurar isso automaticamente, você precisará fazer manualmente, configurando o webhook do Codemagic.
+
+Na tela inicial do GitHub, iríamos em "Settings", na seção de "Webhooks". Se o Codemagic estiver integrado diretamente com o GitHub e tiver as permissões, ele configurará o webhook automaticamente. Caso contrário, teremos que adicionar o webhook, colar o link copiado das configurações do Codemagic e definir os eventos que ele poderá ouvir, como "Branch or tag creation", "Pull requests" e "Pushes".
+
+Agora que o trigger está definido, toda vez que houver um pull request update, o Codemagic executará. Teoricamente, nosso primeiro CI está configurado, mas precisamos verificar se isso funcionará na prática.
+
+Vamos abrir o VS Code para fazer alterações no código, criando uma branch chamada fix/remote-unit-test. Vamos quebrar os testes para abrir um pull request e observar o Codemagic rodando integrado continuamente.
+
+Abrindo a pasta "test > widgets", vamos acessar o arquivo draw_form_test.dart, e no teste que verifica se o nome correto foi selecionado, mudaremos para clicar no nome "Alice2" (find.text('Alice2')), que não existe no projeto, causando um erro.
+
+draw_form_test.dart:
+// Enter a selected option in the Dropdown
+await tester.tap(find.byType(DropdownInputWidget));
+await tester.pumpAndSettle();
+await tester.tap(find.text('Alice2'));
+await tester.pumpAndSettle();
+COPIAR CÓDIGO
+Após salvar e rodar o testWidgets(), ele quebra, e temos a certeza de que isso causará um erro. Faremos um commit com a mensagem "fix: break widget test", publicaremos a branch e voltaremos para o GitHub.
+
+No canto superior direito, teremos a opção "Compare and pull request". Ao abrir, podemos verificar as alterações e, nesse cenário, quando for criado o pull request, o Codemagic deverá executar automaticamente. Ele vai aparecer no GitHub e nem habilitará a opção de fazer o merge, porque primeiro executa.
+
+Uma vez que falhar, o CI identificará um problema no código e não permitirá o merge. No Codemagic, podemos acompanhar isso em tempo real na opção "Builds" do menu lateral esquerdo. Ele vai preparar a máquina, pegar os app sources, instalar o SDK, instalar todas as dependências e rodar. Esse processo demora um pouco, e ao final ele falha. No GitHub, teremos a informação de que todos os cheques falharam e não é possível fazer o merge.
+
+Se voltarmos ao VS Code e corrigirmos o erro de "Alice2" para "Alice", que é o formato correto, e subirmos essa correção, o CI rodará todo o processo para verificar se está tudo correto. Como ele monitora todas as atualizações do pull request, ele executará novamente o Default Workflow.
+
+Agora, como a correção foi feita corretamente, ele habilitará o merge na branch. No Codemagic, também estará executando e mostrará que o primeiro deu erro e o segundo teve sucesso. Todos os testes passaram e tudo funcionou bem. No GitHub, também passou tudo e temos a opção de fazer o merge.
+
+Conclusão
+Com isso, já verificamos a confiabilidade do processo de CI. Por mais que ainda seja simples e esteja rodando tudo automaticamente, é um processo que garante uma boa qualidade para nosso projeto. A cada alteração, ele garante que não temos nenhum problema no código, que os testes estão passando e que não vamos subir nada que quebre o projeto.
+
+Ainda falta configurarmos os testes de integração, que são um pouco mais complexos e exigem o uso de um emulador. É isso que vamos abordar na próxima aula!
+
+@@05
+Comandos no CI
+
+Você está configurando um fluxo de CI para um projeto Flutter no Codemagic. Um dos requisitos é definir os comandos para executar testes unitários e testes de widgets no seu projeto.
+Qual das seguintes alternativas representa corretamente os comandos a serem definidos para executar esses testes no Codemagic?
+
+flutter test para rodar ambos, tanto testes unitários, quanto testes de widgets.
+ 
+O comando flutter test, executa ambos os tipos de testes, tanto unitário, quanto de widget.
+Alternativa correta
+flutter test -all para rodar ambos, tanto testes unitários, quanto testes de widgets.
+ 
+Incorreto, o comando –all, não é aplicativo nos testes para definir que deve-se executar todos juntos.
+Alternativa correta
+flutter test para testes unitários e flutter test widget para testes de widgets.
+
+@@06
+Faça como eu fiz
+
+Até agora, você aprendeu como fazer a configuração de um processo básico e estruturado para um fluxo de CI estruturado e sincronizado com o seu repositório Git.
+Agora é com você, faça a configuração do seu projeto e garanta que será acionado sempre que houver atualização/abertura em um pull request para uma branch do projeto.
+
+Após o cadastro do projeto, inicie o processo de configuração, passando pelas seguintes etapas:
+Em ‘Build for platforms’ selecione a opção ‘run tests only’.
+Depois em ‘build triggers’ em ‘Automatic build triggering’ selecione a opção ‘Trigger on pull request update’ e em ‘Watched branch patterns’ deixe o ‘source’ como *, que irá ouvir todas as ações.
+Por fim, na aba de testes, ative o ‘Static code analysis’ e ative o ‘Flutter test’, passando corretamente os argumentos.
+Prontinho, agora é só executar em ‘Start New Build’ para vermos a CI executando o que configuramos. Você pode também, validar ao abrir um PR, que deve rodar o processo automaticamente.
+
+@@07
+O que aprendemos?
+
+Você aprendeu como fazer uma configuração inicial de um processo de CI para seu aplicativo. Vamos revisar?
+Configurando as etapas: Precisamos garantir que os testes e a análise serão executados, então entramos no projeto, dentro do codemagic e ativamos o static code analysis e também a execução do flutter test, importante ressaltar que devemos revisar os comandos gerados pelo codemagic e alterar caso não esteja adequado ao seu projeto.
+Automatizando o processo: Agora, vamos integrar as etapas antes definidas, para garantir que será adequado ao fluxo de trabalho. Para tal, devemos abrir a aba build triggers do codemagic e ajustar os gatilhos que se adequem ao seu contexto, na aula, optamos por utilizar o trigger on pull request update para todas as branchs, para assim executar o fluxo sempre que houver alguma alteração dentro de um pull request.
+E já já, vamos elevar ainda mais a régua de CI, te vejo lá!
